@@ -1,0 +1,100 @@
+DROP TABLE IF EXISTS Albums;
+DROP TABLE IF EXISTS Inventory;
+DROP TABLE IF EXISTS Buyer;
+DROP TABLE IF EXISTS Records_Sold;
+DROP TABLE IF EXISTS Seller;
+DROP TABLE IF EXISTS Purchases_On_Records;
+DROP TABLE IF EXISTS Inventory_Finance;
+DROP TABLE IF EXISTS Request_Description;
+DROP TABLE IF EXISTS Requests;
+
+
+
+/*Final Draft of Database*/
+
+CREATE TABLE `Albums` (
+  `AlbumKey` INT NOT NULL,
+  `Name` TEXT,
+  `Year` TEXT,
+  `Artist` TEXT,
+  `Tracks` TEXT,
+  PRIMARY KEY (`AlbumKey`)
+);
+
+CREATE TABLE `Inventory` (
+  `InventoryID ` INTEGER NOT NULL,
+  `RecordType` TEXT,
+  `Condtion` TEXT,
+  `ItemCount` INTEGER,
+  `AlbumKey` INTEGER,
+  PRIMARY KEY (`InventoryID `),
+  FOREIGN KEY (`AlbumKey`) REFERENCES `Albums`(`AlbumKey`)
+);
+
+CREATE TABLE `Buyer` (
+  `BuyerID ` INTEGER NOT NULL,
+  `FirstName` TEXT,
+  `LastName` TEXT,
+  `Password` TEXT UNIQUE,
+  `Email` TEXT UNIQUE,
+  `PhoneNumber` TEXT UNIQUE,
+  PRIMARY KEY (`BuyerID `)
+);
+
+CREATE TABLE `Records_Sold` (
+  `SoldKey` INTEGER NOT NULL,
+  `BuyerID` INTEGER NOT NULL,
+  `Price` TEXT,
+  `Discount` TEXT,
+  `Profit` TEXT,
+  `ItemCount` INTEGER,
+  `DateTime` TEXT,
+  PRIMARY KEY (`SoldKey`),
+  FOREIGN KEY (`BuyerID`) REFERENCES `Buyer`(`BuyerID `)
+);
+
+CREATE TABLE `Seller` (
+  `SellerID ` INTEGER NOT NULL,
+  `FirstName` TEXT,
+  `LastName` TEXT,
+  `Email` TEXT,
+  `PhoneNumber` TEXT,
+  PRIMARY KEY (`SellerID `)
+);
+
+CREATE TABLE `Purchases_On_Records` (
+  `PurchaseKey` INTEGER NOT NULL,
+  `SellerID` INTEGER NOT NULL,
+  `Cost` TEXT,
+  `Tax` TEXT,
+  `ItemCount` INTEGER,
+  `DateTime` TEXT,
+  PRIMARY KEY (`PurchaseKey`),
+  FOREIGN KEY (`SellerID`) REFERENCES `Seller`(`SellerID `)
+);
+
+CREATE TABLE `Inventory_Finance` (
+  `InventoryID` INTEGER NOT NULL,
+  `PurchaseKey` INTEGER NOT NULL,
+  `SoldKey` INTEGER,
+  PRIMARY KEY (`InventoryID`, `PurchaseKey`, `SoldKey`),
+  FOREIGN KEY (`SoldKey`) REFERENCES `Records_Sold`(`SoldKey`),
+  FOREIGN KEY (`InventoryID`) REFERENCES `Inventory`(`InventoryID `),
+  FOREIGN KEY (`PurchaseKey`) REFERENCES `Purchases_On_Records`(`PurchaseKey`)
+);
+
+CREATE TABLE `Request_Description` (
+  `RequestKey` INTEGER NOT NULL,
+  `AlbumRequest` TEXT NOT NULL,
+  PRIMARY KEY (`RequestKey`)
+);
+
+CREATE TABLE `Requests` (
+  `RequestKey` INTEGER NOT NULL,
+  `BuyerID` INTEGER NOT NULL,
+  PRIMARY KEY (`RequestKey`),
+  FOREIGN KEY (`RequestKey`) REFERENCES `Request_Description`(`RequestKey`),
+  FOREIGN KEY (`BuyerID`) REFERENCES `Buyer`(`BuyerID `)
+);
+
+
