@@ -1,0 +1,30 @@
+PRAGMA foreign_keys = ON;
+
+INSERT INTO Albums(Name, Year, Artist, Tracks)
+    VALUES
+    ('Gymrats', '2001', 'Crazz', '4');
+INSERT INTO Inventory(RecordType, Condition, ItemCount)
+    VALUES
+    ('45s', 'Fair', '7');
+INSERT INTO Buyer(FirstName, LastName, Email, PhoneNumber)
+    VALUES
+    ('Alec', 'Kuzmack', 'akuz7@gmail.com', '208-897-2322');
+INSERT INTO Records_Sold(Price, Discount, Profit)
+    VALUES
+    ('$25.00', '$10.00', '$15.00', '3');
+INSERT INTO Seller(FirstName, LastName, Email, PhoneNumber)
+    VALUES
+    ('Mike', 'Gus', 'Mikegus@gmail.com', '208-456-0987');
+INSERT INTO Purchases_On_Records(Cost, Tax)
+    VALUES
+    ('$8.00', '$0');
+INSERT INTO Request_Description(AlbumRequest, PriceRequest, ConditionRequest, RecordTypeRequest)
+    VALUES
+    ('Shibot', '$25.00', 'Fair', '45s');
+INSERT INTO Requests(RequestKey, BuyerID)
+    VALUES
+    (1,1);
+
+
+
+
