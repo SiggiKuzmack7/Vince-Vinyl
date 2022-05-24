@@ -1,0 +1,75 @@
+import sqlite3
+def add_person(first,last, password, email, phonenumber):
+
+    
+
+    # Connect to the database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+
+    # Create a cursor
+    cur = conn.cursor()
+
+    #Execute some SQL
+    cur.execute("PRAGMA foreign_keys = ON;")
+
+    #Add a person
+    cur.execute('''
+        INSERT INTO Buyer(FirstName, LastName, Password, Email, PhoneNumber) 
+        VALUES (?, ?, ?, ?, ?);
+        ''', (first,last, password, email, phonenumber))
+
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+    
+
+def remove_person(password):
+
+    
+    # Create a connection to the database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+
+    # Create a cursor object
+    cur = conn.cursor()
+    
+    # Turn on foreign_key constraints
+    cur.execute("PRAGMA foreign_keys = ON;")
+
+    # Remove person from database:
+    cur.execute("DELETE FROM Buyer WHERE password = ?;", (password,))
+        #if you want a tuple with one element, you have to put a comma after that element
+
+    # Commit (i.e. save) the changes
+    conn.commit()
+
+    # Close the connection
+    conn.close()
+   
+    
+
+def add_requests (Album):
+
+    
+    #Connect to the database
+    conn = sqlite3.connect(Vinces_Vinyl.db)
+    
+    #Createcursor object
+    cur = conn.cursor()
+    
+    #Turn on foreign_key constraints
+    cur.execute("PRAGMA foreign_keys - ON;")
+    
+    #insert the requests into the database
+    cur.execute('''
+    INSERT INTO Request_Discription(AlbumRequest)
+    VALUES (?);
+    ''', (Album,))
+    
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+# Update database, add password and also add a lookup entity for credit card informaton and delete phone numbers
