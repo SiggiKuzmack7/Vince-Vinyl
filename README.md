@@ -1,2 +1,1 @@
-# Vince-Vinyl
-SQLite relational database for a records shop. Database tracks specific Tables with attributes attached to them that link toghether. 
+# Vince-Vinyl# SQLite relational database for a records shop. Database tracks specific entities(Tables) with attributes attached to them that link and interact with eachother. This database consists of 9 tables in total, consisting of linking, lookup, and domain entities. 
