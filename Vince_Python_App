@@ -1,0 +1,256 @@
+import sqlite3
+import buyer_functions as db
+import vince_functions as db1
+
+
+def get_buyer_emails():
+    list_of_emails = []
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+    cur = conn.cursor()
+    cur.execute("SELECT Email FROM Buyer;")
+    result = cur.fetchall()
+    return result
+
+def get_buyer_passwords():
+    list_of_passwords = []
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+    cur = conn.cursor()
+    cur.execute("SELECT Password FROM Buyer;")
+    result = cur.fetchall()
+    return result
+
+
+#BUYER FUNCTIONS
+def add_buyer():  # this function adds a new user or
+    list_of_emails = get_buyer_emails()
+    list_of_passwords = get_buyer_passwords()
+    print("--------------User Sign in--------------")
+    print("0 Existing user")
+    print("1 New user")
+    print("2 Return")
+    #Asks user if they are a new or existing user
+
+    new = input("What would you like to do? ")
+
+
+
+    while new != "2":
+
+        #If new user asks to enter name/contact information and password
+        if new == '1':
+            first = input("Please enter your first name: ")
+            last = input("Please enter your last name: ")
+            password = input("Please enter password: ")
+            email = input("Please enter your email: ")
+            phonenumber = input("Please enter phone number: ")
+            if email not in list_of_emails or password not in list_of_passwords:
+                db.add_person(first, last, password, email, phonenumber)
+                list_of_emails.append(email)
+                list_of_passwords.append(password)
+                print("A new user has been added.")
+            else:
+                print("This user is already in the database.")
+
+    #If existing user asks user to enter name/contact information
+        elif new == '0':
+            email = input("Please enter your email: ")
+            password = input("Please enter your password: ")
+
+
+            #Create error if name or contact email not in database 'name or contact information incorrect, if you are new please select new customer'
+            if email in list_of_emails and password in list_of_passwords:
+                main_menu(email, password, list_of_passwords, list_of_emails)
+            else:
+                print("This user is not in the database")
+        print("--------------User Sign in--------------")
+        print("0 Existing user")
+        print("1 New user")
+        print("2 Return")
+        new = input("What would you like to do? ")
+
+def remove_buyer():
+    print('---------Remove buyer-----------')
+    password = input("Enter password ")
+    db.remove_person(password)
+    print(f'-----Buyer removed!--------')
+
+
+def main_menu(email, password, list_of_passwords, list_of_emails):
+    old_email = email
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+    cur = conn.cursor()
+    print("--------------Main Menu--------------")
+    print("1 Make a request on record.")
+    print("2 Account settings.")
+
+    #Asks user what they would like to do
+    option = input("Please enter 1 or 2: ")
+
+    #Make a request on record
+    if option == '1':
+        #Enter requested record name
+        name = input("Enter requested record/album name: ")
+
+        #add the request to the request table, and get the buyer_ID using the email or password, then add that to linking entity
+        cur.execute(
+            "INSERT INTO Request_Description (AlbumRequest) VALUES (?);",
+            (name,))
+        print("Your request of", name, "has been added.")
+
+        #Account settings
+    elif option == '2':
+        print("a Update account information.")
+        print("b Delete account")
+        select = input("Please enter a or b: ")
+        #Update account information
+        if select == 'a':
+            print("i Update email.")
+            print("ii Update password.")
+            print("iii Update phone number.")
+            update = input("Please enter i, ii, or iii: ")
+            #update email and add to database
+            if update == 'i':
+                old_password = input("Please enter your password: ")
+                new_email = input("Please enter your new email: ")
+                cur.execute(
+                    '''UPDATE Buyer
+                               SET Email = ?
+                               WHERE Password = ?;''',
+                    (new_email, old_password))
+                print("Your email has been successfully updated.")
+
+                #update password and add to database
+            elif update == 'ii':
+                old_password = input("Please enter your old password: ")
+                new_password = input("Please enter your new password: ")
+                cur.execute(
+                    '''UPDATE Buyer
+                               SET Password = ?
+                               WHERE Email = ?;''',
+                    (new_password, old_email))
+                print("Your password has been successfully updated.")
+
+                #update phone number and add to database
+            elif update == 'iii':
+                old_password = input("Please enter your password: ")
+                new_phonenumber = input("Please enter your new phone number: ")
+                cur.execute(
+                    '''UPDATE Buyer
+                               SET PhoneNumber = ?
+                               WHERE Password = ?;''',
+                    (new_phonenumber, old_password))
+                print("Your phone number has been successfully updated")
+
+
+            #Delete account
+        elif select == 'b':
+            old_password = input("Please enter your password to confirm deletng your account: ")
+            cur.execute(
+                "DELETE FROM Buyer WHERE Email = ?;",
+                (old_email,)
+            )
+            list_of_passwords.remove(old_password)
+            list_of_emails.remove(old_email)
+            print("Your account has been successfully deleted.")
+
+# we need to figure out a way to connect list_of_passwords and list_of_emails directly to the database...
+
+
+
+#VINCES FUNCTIONS
+
+#Create sign in for Vince with made up password and username
+def vince_sign_in():
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+    cur = conn.cursor()
+    print("Please enter admin username and password")
+    username = input("username: ")
+    password = input("password: ")
+    if password == "password" and username == "Vince123":
+
+    #Options for Vince once he is signed in
+        print("-----------------")
+        print("Vince's Menu")
+        print("-----------------")
+        options2 = ['Add inventory item', 'Add puchase on record', 'Add records sold', 'Quit']
+        while True:
+            for i, option in enumerate(options2):
+                print(i, option)
+            choice = int(input('What would you like to do? '))
+            if choice == len(options2) - 1:  #Quit option
+                print("-----------------")    
+                print("Main Menu")
+                print("-----------------")
+                break
+            elif choice == 0:
+                Name = input("Enter album name: ")
+                Year = input("Enter album year: ")
+                Artist = input("Enter artist: ")
+                Tracks = input("Enter number of songs/tracks on album: ")
+                RecordType = input("Enter record type: ")
+                Condition = input("Enter record condition as Mint, Good, Fair, or Poor: ")
+                ItemCount = input("How many of these records are there?: ")
+
+                db1.add_inventory_item(RecordType, Condition, ItemCount) #add inventory item
+                db1.add_album(Name, Year, Artist, Tracks)
+                print("-----------------")
+                print("Record added to inventory")
+                print("-----------------")
+            elif choice == 1:
+                FirstName = input("Enter seller's first name: ")
+                LastName = input("Enter seller's last name: ")
+                Email = input("Enter seller's email: ")
+                PhoneNumber = input("Enter seller's phonenumber: ")
+
+                Cost = input("Cost of record EX) 5.00: ")
+                Tax = float(Cost) * .06
+
+                db1.add_purchase_on_records(Cost, Tax) #add purchase on records
+                db1.add_seller(FirstName, LastName, Email, PhoneNumber)
+                print("-----------------")
+                print("Record and Seller added to purchases")
+                print("-----------------")
+            elif choice == 2:
+                Price = input("Enter price sold for EX) 5.00: ")
+                Discount = input("Enter discount if given: ")
+                Profit = float(Price) - float(Discount)
+
+                db1.add_records_sold(Price, Discount, Profit) #add record sold
+                print("-----------------")
+                print("Record added to sales")
+                print("-----------------")
+    else:
+        print("----------------")
+        print("Admin username or password incorrect")
+        print("----------------")
+
+#User Interface
+def main():
+
+    print("-----------------")
+    print("Main Menu")
+    print("-----------------")
+    options = ['New or existing buyer sign in', 'Admin Sign In', 'Quit']
+    while True:
+        for i, option in enumerate(options):
+            print(i, option)
+        choice = int(input('What would you like to do? '))
+        if choice == len(options) - 1:  #Quit option
+            break
+        elif choice == 0:  #Buyer sign in
+            add_buyer()
+        elif choice == 1:
+            vince_sign_in()
+        else:
+            print('--------------------')
+            print(f'Sorry, I cannot perform option {choice}...yet.')
+            print('--------------------')
+
+    print('---------------------')
+    print('Goodbye!')
+    print('---------------------')
+
+
+
+main()
+
