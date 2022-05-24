@@ -1,0 +1,127 @@
+import sqlite3
+def add_album(Name, Year, Artist, Tracks):
+
+    
+
+    # Connect to the database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+
+    # Create a cursor
+    cur = conn.cursor()
+
+    #Execute some SQL
+    cur.execute("PRAGMA foreign_keys = ON;")
+
+    #Adds an album
+    cur.execute('''
+        INSERT INTO Albums(Name, Year, Artist, Tracks) 
+        VALUES (?, ?, ?, ?);
+        ''', (Name, Year, Artist, Tracks))
+
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+
+
+def add_inventory_item(RecordType, Condition, ItemCount):
+    
+    
+
+    # Connect to the database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+
+    # Create a cursor
+    cur = conn.cursor()
+
+    #Execute some SQL
+    cur.execute("PRAGMA foreign_keys = ON;")
+
+    #Adds a record
+    cur.execute('''
+        INSERT INTO Inventory(RecordType, Condition, ItemCount) 
+        VALUES (?, ?, ?);
+        ''', (RecordType, Condition, ItemCount))
+
+
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+
+def add_records_sold(Price, Discount, Profit):
+    # Add connection to database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+
+
+    # Create a cursor
+    cur = conn.cursor()
+
+    #Execute some SQL
+    cur.execute("PRAGMA foreign_keys = ON;")
+
+    #Add a record sold
+    cur.execute('''
+        INSERT INTO Records_Sold(Price, Discount, Profit) 
+        VALUES (?, ?, ?);
+        ''', (Price, Discount, Profit))
+
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+
+
+def add_seller(FirstName, LastName, Email, PhoneNumber):
+
+    
+    #Connect to the database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+    
+    #Createcursor object
+    cur = conn.cursor()
+    
+    #Turn on foreign_key constraints
+    cur.execute("PRAGMA foreign_keys = ON;")
+    
+    #insert the payment information into the dataabase:
+    cur.execute('''
+    INSERT INTO Seller(FirstName, LastName, Email, PhoneNumber)
+    VALUES(?,?,?,?);
+    ''', (FirstName, LastName, Email, PhoneNumber))
+    
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+    
+    
+
+def add_purchase_on_records(Cost, Tax):
+
+    
+    #Connect to the database
+    conn = sqlite3.connect('Vinces_Vinyl.db')
+    
+    #Createcursor object
+    cur = conn.cursor()
+    
+    #Turn on foreign_key constraints
+    cur.execute("PRAGMA foreign_keys = ON;")
+    
+    #Add purchase on record:
+    cur.execute('''
+    INSERT INTO Purchases_On_Records(Cost, Tax)
+    VALUES(?,?);
+    ''', (Cost, Tax))
+    
+    #Save changes
+    conn.commit()
+
+    #Close connection
+    conn.close()
+    
