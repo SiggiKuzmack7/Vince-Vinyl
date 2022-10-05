@@ -35,10 +35,11 @@ CREATE TABLE `Buyer` (
   `BuyerID ` INTEGER NOT NULL,
   `FirstName` TEXT,
   `LastName` TEXT,
-  `Password` TEXT UNIQUE,
-  `Email` TEXT UNIQUE,
-  `PhoneNumber` TEXT UNIQUE,
-  PRIMARY KEY (`BuyerID `)
+  `Password` INTEGER UNIQUE NOT NULL,
+  `Email` TEXT UNIQUE NOT NULL,
+  PhoneNumber INTEGER UNIQUE NOT NULL,
+  PRIMARY KEY (`InventoryID `),
+  FOREIGN KEY (`AlbumKey`) REFERENCES `Albums`(`AlbumKey`)
 );
 
 CREATE TABLE `Records_Sold` (
